@@ -22,26 +22,31 @@ local function spellCheck(path)
   local txtStr =  txt:read("*all")
   txt:close()
   local words = {}
-  txtStr:gsub("%s",function(c) table.insert(words,c) end)
+  wrongWords = {}
+  for word in txtStr:gmatch("%w+") do table.insert(words, word) end
   print (#words)
   print(words[2])
-  if check(words[1]) then
-    print("yes")
-  else
-    print("no")
-  end
-  
-  
-      
-    
+  k = 1
+  for i = 1, #words do
+    check(words[i])
+  end  
+  for i = 1, #wrongWords do
+    print(wrongWords[i])
+    end
   end 
+  
+  
 function check(word)
-  for i = 1, #a do
-    if word == a[i] then
-      return true
+  for j = 1, #a do
+    if word == a[j] then
+   -- or string.lower(word) == a[j] 
+      print("Correctly spelled word!")
+      return
       end
   end
-  return false
+  print("Misspelled word!")
+  wrongWords[#wrongWords+1] = word
+  return
   end
 
 -- Download the dictionary into a table
@@ -74,6 +79,7 @@ elseif input == "2" then
   word = io.stdin:read("*l")
   f = io.open(dictionaryFile, "a")
   io.output(f)
+  io.write("\n")
   io.write(word)
   io.close(f)
   print("Successfully added word to the dictionary!")
