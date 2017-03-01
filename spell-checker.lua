@@ -11,7 +11,7 @@ local dictionaryFile = "dictionary.txt"
 
 local function printInstructions()
   -- Prints the instructions
-  print("Please input 1 to enter a text file to spell check, input 2 to enter a new word into the dictionary, or input 3 to exit the program: ")
+  print("\nPlease input 1 to enter a text file to spell check, input 2 to enter a new word into the dictionary, or input 3 to exit the program: ")
 end
 
 local function spellCheck(path)
@@ -49,7 +49,7 @@ local function spellCheck(path)
     print(wrongWords[i])
   end
   
-  print("There are this many words spelled incorrectly: ",#wrongWords)
+  print("\nThere are this many words spelled incorrectly: ",#wrongWords)
     
 end -- end spellCheck()
 
@@ -98,9 +98,9 @@ function partition(list, first, last)
 end -- end partition()
 
 function check(word)
-  for j = 1, #dicWords do
-    if word == dicWords[j] then
-   -- or string.lower(word) == dicWords[j] 
+  for j = 1, #dictionaryWords do
+    if word == dictionaryWords[j] then
+   -- or string.lower(word) == dictionaryWords[j] 
       print("Correctly spelled word!")
       return
     end
@@ -111,20 +111,24 @@ function check(word)
   return
 end -- end check()
 
--- Download the dictionary into a table
-dic = io.open(dictionaryFile, "r")
-io.input(dic)
-dicWords = {}
-for line in io.lines() do
-  table.insert(dicWords, string.lower(line))
+function downloadDictionary()
+  -- Download the dictionary into a table
+  dic = io.open(dictionaryFile, "r")
+  io.input(dic)
+  dictionaryWords = {}
+  for line in io.lines() do
+    table.insert(dictionaryWords, string.lower(line))
+  end
+  
+  print("\nThere are ",#dictionaryWords," words in the dictionary.")
+  
+  dic:close()
 end
 
-print("There are ",#dicWords," words in the dictionary.")
-
-dic:close()
+downloadDictionary()
 
 -- Print Greeting
-print("Welcome to the spell-checker.")
+print("\nWelcome to Spell-Checker.")
 
 -- Read input
 ::getChoice::
@@ -136,7 +140,7 @@ if input == "1" then
   -- Spell check
   ::spellCheck::
   
-  print("Please input the path name to a .txt file, or input -1 to go back: ")
+  print("\nPlease input the path name to a .txt file, or input -1 to go back: ")
   repeat path = io.stdin:read() until path ~= "\n"
   
   if path ~= "-1" then
@@ -146,27 +150,33 @@ if input == "1" then
   goto getChoice
   
 elseif input == "2" then
-  print("Please input a word to add to the dictionary: ")
+  print("\nPlease input a word to add to the dictionary, or input -1 to go back: ")
   word = io.stdin:read("*l")
-  f = io.open(dictionaryFile, "a")
-  io.output(f)
-  io.write("\n")
-  io.write(word)
-  io.close(f)
-  print("Successfully added word to the dictionary!")
+  
+  if word ~= "-1" then
+    f = io.open(dictionaryFile, "a")
+    io.output(f)
+    io.write("\n")
+    io.write(word)
+    io.close(f)
+    --TODO: Should probably redownload the dictionary at this point, or just add the new word to the end of the dictionary array as quick fix
+    downloadDictionary()
+    print("\nSuccessfully added word to the dictionary!")
+  end
+  
   goto getChoice  
   
 elseif input == "3" then
   goto exit
   
 else
-  print("Incorrect input.")
+  print("\nIncorrect input.")
   goto getChoice
 end
 
 -- End of program
 ::exit::
-print("Thank you for using Spell-checker!")
+print("\nThank you for using Spell-Checker!")
 
 
   
