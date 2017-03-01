@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.ldt.debug.core.lualocaldebug">
+<stringAttribute key="mainScript" value=""/>
+<booleanAttribute key="org.eclipse.dltk.launching.debugConsole" value="false"/>
+<stringAttribute key="process_factory_id" value="org.eclipse.dltk.launching.scriptProcessFactory"/>
+<stringAttribute key="project" value=""/>
+</launchConfiguration>
