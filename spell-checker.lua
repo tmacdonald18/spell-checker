@@ -66,18 +66,18 @@ function quickSortHelper(list, first, last)
 end -- end quickSortHelper()
 
 function partition(list, first, last)
-  pivotValue = string.byte(list[first])
+  pivotValue = list[first]
   
   leftMark = first + 1
   rightMark = last
   
   done = false
   while not done do
-    while leftMark <= rightMark and string.byte(list[leftMark]) <= pivotValue do
+    while leftMark <= rightMark and list[leftMark] <= pivotValue do
       leftMark = leftMark + 1
     end
 
-    while string.byte(list[rightMark]) >= pivotValue and rightMark >= leftMark do
+    while list[rightMark] >= pivotValue and rightMark >= leftMark do
       rightMark = rightMark - 1
     end
     
