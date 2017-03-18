@@ -28,10 +28,9 @@ local function spellCheck(path)
   local words = {}
   wrongWords = {}
 
-  for word in txtStr:gmatch("%w+") do table.insert(words, word) end
+  for word in txtStr:gmatch("%w+") do table.insert(words, string.lower(word)) end
 
-  print (#words)
-  print(words[2])
+  print (#words, "words in the file.")
 
   for i = 1, #words do
     check(words[i])
@@ -98,13 +97,17 @@ function partition(list, first, last)
 end -- end partition()
 
 function check(word)
-  for j = 1, #dictionaryWords do
-    if word == dictionaryWords[j] then
-   -- or string.lower(word) == dictionaryWords[j] 
-      print("Correctly spelled word!")
-      return
-    end
-  end
+  print(word)
+  c = string.sub(word, 1, 1)
+  if tonumber(c) == nil then
+    for i = 1, #dictWords[c] do
+      if word == dictWords[c][i] then
+     -- or string.lower(word) == dictionaryWords[j] 
+        print("Correctly spelled word!")
+       return
+      end
+     end
+   end
   
   print("Misspelled word!")
   wrongWords[#wrongWords+1] = word
@@ -115,13 +118,41 @@ function downloadDictionary()
   -- Download the dictionary into a table
   dic = io.open(dictionaryFile, "r")
   io.input(dic)
-  dictionaryWords = {}
+  dictWords = {}
+  dictWords.a = {}
+  dictWords.b = {} 
+  dictWords.c = {}
+  dictWords.d = {}
+  dictWords.e = {}
+  dictWords.f = {}
+  dictWords.g = {}
+  dictWords.h = {}
+  dictWords.i = {}
+  dictWords.j = {}
+  dictWords.k = {}
+  dictWords.l = {}
+  dictWords.m = {}
+  dictWords.n = {}
+  dictWords.o = {}
+  dictWords.p = {}
+  dictWords.q = {}
+  dictWords.r = {}
+  dictWords.s = {}
+  dictWords.t = {}
+  dictWords.u = {}
+  dictWords.v = {}
+  dictWords.w = {}
+  dictWords.x = {}
+  dictWords.y = {}
+  dictWords.z = {}
   for line in io.lines() do
-    table.insert(dictionaryWords, string.lower(line))
+    dWord = string.lower(line)
+    c = string.sub(dWord, 1, 1)
+    print(c)
+    table.insert(dictWords[c], dWord)
   end
   
-  print("\nThere are ",#dictionaryWords," words in the dictionary.")
-  
+  --print("\nThere are ",#dictWords," words in the dictionary.")
   dic:close()
 end
 
