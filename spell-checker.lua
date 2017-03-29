@@ -15,41 +15,44 @@ local function printInstructions()
 end
 
 local function spellCheck(path)
-  -- Runs through and spell checks .txt file
+	-- Runs through and spell checks .txt file
   
-  local txt = io.open(path, "r")
-  io.input(txt)
+	local txt = io.open(path, "r")
+	if txt == nil then
+		print("\nSpecified file not found.")
+	else
+		io.input(txt)
 
-  local txtStr =  txt:read("*all")
-  txt:close()
+		local txtStr =  txt:read("*all")
+		txt:close()
 
-  string.lower(txtStr)
+		string.lower(txtStr)
 
-  local words = {}
-  wrongWords = {}
+		local words = {}
+		wrongWords = {}
 
-  for word in txtStr:gmatch("%w+") do table.insert(words, string.lower(word)) end
+		for word in txtStr:gmatch("%w+") do table.insert(words, string.lower(word)) end
 
-  print (#words, "words in the file.")
+		print ("\nThere are " .. #words .. " words in the file.\n")
 
-  for i = 1, #words do
-    check(words[i])
-  end  
-  
-  -- puts all the wrong words into lowercase, probably a better way to do this
-  for i = 1, #wrongWords do
-    wrongWords[i] = string.lower(wrongWords[i])
-  end
-  
-  -- quicksort wrong words
-  quickSort(wrongWords)
+		for i = 1, #words do
+			check(words[i])
+		end  
+		  
+		-- puts all the wrong words into lowercase, probably a better way to do this
+		for i = 1, #wrongWords do
+			wrongWords[i] = string.lower(wrongWords[i])
+		end
+		  
+		-- quicksort wrong words
+		quickSort(wrongWords)
 
-  for i = 1, #wrongWords do
-    print(wrongWords[i])
-  end
-  
-  print("\nThere are this many words spelled incorrectly: ",#wrongWords)
-    
+		for i = 1, #wrongWords do
+			print(i .. ": " .. wrongWords[i])
+		end
+		  
+		print("\nThere are this many words spelled incorrectly: ",#wrongWords)
+	end	
 end -- end spellCheck()
 
 function quickSort(list)
@@ -97,21 +100,18 @@ function partition(list, first, last)
 end -- end partition()
 
 function check(word)
-  print(word)
   c = string.sub(word, 1, 1)
-  if tonumber(c) == nil then
-    for i = 1, #dictWords[c] do
+  if tonumber(c) ~= nil then
+	return
+  else
+	for i = 1, #dictWords[c] do
       if word == dictWords[c][i] then
-     -- or string.lower(word) == dictionaryWords[j] 
-        print("Correctly spelled word!")
-       return
-      end
+		return
+	  end
      end
    end
   
-  print("Misspelled word!")
   wrongWords[#wrongWords+1] = word
-  return
 end -- end check()
 
 function downloadDictionary()
@@ -119,36 +119,16 @@ function downloadDictionary()
   dic = io.open(dictionaryFile, "r")
   io.input(dic)
   dictWords = {}
-  dictWords.a = {}
-  dictWords.b = {} 
-  dictWords.c = {}
-  dictWords.d = {}
-  dictWords.e = {}
-  dictWords.f = {}
-  dictWords.g = {}
-  dictWords.h = {}
-  dictWords.i = {}
-  dictWords.j = {}
-  dictWords.k = {}
-  dictWords.l = {}
-  dictWords.m = {}
-  dictWords.n = {}
-  dictWords.o = {}
-  dictWords.p = {}
-  dictWords.q = {}
-  dictWords.r = {}
-  dictWords.s = {}
-  dictWords.t = {}
-  dictWords.u = {}
-  dictWords.v = {}
-  dictWords.w = {}
-  dictWords.x = {}
-  dictWords.y = {}
-  dictWords.z = {}
+  dictWords_meta = {}
+  dictWords_meta.__index = function(t, key, value)
+	rawset(t, key, {})
+	setmetatable(t[key], dictWords_meta)
+	return t[key]
+  end
+  setmetatable(dictWords, dictWords_meta)
   for line in io.lines() do
     dWord = string.lower(line)
     c = string.sub(dWord, 1, 1)
-    print(c)
     table.insert(dictWords[c], dWord)
   end
   
@@ -156,10 +136,10 @@ function downloadDictionary()
   dic:close()
 end
 
-downloadDictionary()
-
 -- Print Greeting
 print("\nWelcome to Spell-Checker.")
+
+downloadDictionary()
 
 -- Read input
 ::getChoice::
@@ -168,9 +148,6 @@ input = io.stdin:read("*l")
 
 -- Process selection
 if input == "1" then
-  -- Spell check
-  ::spellCheck::
-  
   print("\nPlease input the path name to a .txt file, or input -1 to go back: ")
   repeat path = io.stdin:read() until path ~= "\n"
   
@@ -181,22 +158,23 @@ if input == "1" then
   goto getChoice
   
 elseif input == "2" then
-  print("\nPlease input a word to add to the dictionary, or input -1 to go back: ")
-  word = io.stdin:read("*l")
+	print("\nPlease input a word to add to the dictionary, or input -1 to go back: ")
+	word = io.stdin:read("*l")
   
-  if word ~= "-1" then
+	if word == "-1" then
+		goto getChoice
+	end
+  
     f = io.open(dictionaryFile, "a")
     io.output(f)
     io.write("\n")
     io.write(word)
     io.close(f)
-    --TODO: Should probably redownload the dictionary at this point, or just add the new word to the end of the dictionary array as quick fix
     downloadDictionary()
     print("\nSuccessfully added word to the dictionary!")
-  end
-  
-  goto getChoice  
-  
+	
+	goto getChoice
+	
 elseif input == "3" then
   goto exit
   
