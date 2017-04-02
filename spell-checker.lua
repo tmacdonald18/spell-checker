@@ -30,8 +30,11 @@ local function spellCheck(path)
 
 		local words = {}
 		wrongWords = {}
-
-		for word in txtStr:gmatch("%w+") do table.insert(words, string.lower(word)) end
+   -- name = txtStr:gsub("%p", "")
+   -- print(name)
+ 
+		for word in txtStr:gmatch("([^".."%s+".."]+)") do table.insert(words, string.lower(word)) end
+		words = cleanUp(words)
 
 		print ("\nThere are " .. #words .. " words in the file.\n")
 
@@ -113,6 +116,27 @@ function check(word)
   
   wrongWords[#wrongWords+1] = word
 end -- end check()
+
+function cleanUp(words)
+  for i = 1, #words do 
+  words[i] = clean(words[i])
+  end
+  return words
+end
+
+function clean(word)
+  c = string.sub(word, -1, -1)
+  if c:find('%p') ~= nil then
+    word = string.sub(word, 1, -2)
+    word = clean(word)
+  end
+  c = string.sub(word, 1, 1)
+  if c:find('%p') ~= nil then
+    word = string.sub(word, 2, -1)
+    word = clean(word)
+  end
+  return word
+end
 
 function downloadDictionary()
   -- Download the dictionary into a table
