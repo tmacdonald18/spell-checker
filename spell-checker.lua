@@ -118,13 +118,15 @@ function check(word)
 end -- end check()
 
 function cleanUp(words)
+  -- Helper function
   for i = 1, #words do 
   words[i] = clean(words[i])
   end
   return words
-end
+end -- end cleanUp()
 
 function clean(word)
+  -- Trims the fat off recursively
   c = string.sub(word, -1, -1)
   if c:find('%p') ~= nil then
     word = string.sub(word, 1, -2)
@@ -136,7 +138,7 @@ function clean(word)
     word = clean(word)
   end
   return word
-end
+end -- end clean()
 
 function downloadDictionary()
   -- Download the dictionary into a table
