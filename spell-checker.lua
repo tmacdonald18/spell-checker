@@ -107,20 +107,21 @@ function check(word)
   if tonumber(c) ~= nil then
 	return
   else
-	for i = 1, #dictWords[c] do
-      if word == dictWords[c][i] then
+	 for i = 1, #dictWords[c] do
+    if word == dictWords[c][i] then
 		return
 	  end
-     end
    end
-  
-  wrongWords[#wrongWords+1] = word
+  end
+  if word ~= '' then
+   wrongWords[#wrongWords+1] = word
+  end
 end -- end check()
 
 function cleanUp(words)
   -- Helper function
   for i = 1, #words do 
-  words[i] = clean(words[i])
+    words[i] = clean(words[i])
   end
   return words
 end -- end cleanUp()
@@ -128,14 +129,12 @@ end -- end cleanUp()
 function clean(word)
   -- Trims the fat off recursively
   c = string.sub(word, -1, -1)
-  if c:find('%p') ~= nil then
-    word = string.sub(word, 1, -2)
-    word = clean(word)
+  if c:find('[^%w]') ~= nil then
+    return clean(string.sub(word, 1, -2))
   end
   c = string.sub(word, 1, 1)
-  if c:find('%p') ~= nil then
-    word = string.sub(word, 2, -1)
-    word = clean(word)
+  if c:find('[^%w]') ~= nil then
+    return clean(string.sub(word, 2, -1))
   end
   return word
 end -- end clean()
