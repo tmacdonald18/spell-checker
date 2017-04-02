@@ -30,8 +30,6 @@ local function spellCheck(path)
 
 		local words = {}
 		wrongWords = {}
-   -- name = txtStr:gsub("%p", "")
-   -- print(name)
  
 		for word in txtStr:gmatch("([^".."%s+".."]+)") do table.insert(words, string.lower(word)) end
 		words = cleanUp(words)
@@ -108,7 +106,7 @@ function check(word)
 	return
   else
 	 for i = 1, #dictWords[c] do
-    if word == dictWords[c][i] then
+    if word == string.lower(dictWords[c][i]) then
 		return
 	  end
    end
